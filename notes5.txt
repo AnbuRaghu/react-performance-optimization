@@ -1,0 +1,156 @@
+
+* but in next js we don't have explixcitly set this treeshaking it's by default handled by next
+
+
+
+**Tree shaking** is a term commonly used in the context of JavaScript bundlers (like Webpack, Rollup, and Parcel) and refers to a technique used to eliminate dead code from the final bundle. Here’s a detailed explanation:
+
+### What is Tree Shaking?
+
+Tree shaking is a form of **dead code elimination** that helps reduce the size of JavaScript bundles by removing code that is not used in the application. This process ensures that only the necessary parts of the code are included in the final output, leading to improved performance and faster loading times.
+
+### How Does Tree Shaking Work?
+
+1. **Static Analysis**: 
+   - Tree shaking works by analyzing the **import and export statements** in your modules. It uses **static analysis** to determine which parts of the code are actually used (or "imported") and which parts are not.
+
+2. **ES6 Modules**: 
+   - Tree shaking is most effective with **ES6 (ECMAScript 2015)** modules because they use a static structure (import/export syntax). This allows the bundler to analyze dependencies and determine unused code at build time.
+   - Example:
+     ```javascript
+     // module.js
+     export const usedFunction = () => { console.log('I am used!'); }
+     export const unusedFunction = () => { console.log('I am not used!'); }
+     ```
+
+3. **Build Tools**: 
+   - Modern JavaScript bundlers, like Webpack and Rollup, implement tree shaking algorithms that identify and remove unused exports during the bundling process. 
+   - They will only include the `usedFunction` in the final bundle, excluding the `unusedFunction`.
+
+### Example of Tree Shaking
+
+Here’s a simple example to illustrate tree shaking:
+
+**Before Tree Shaking:**
+
+```javascript
+// utils.js
+export const usedFunction = () => { console.log('I am used!'); }
+export const unusedFunction = () => { console.log('I am not used!'); }
+
+// main.js
+import { usedFunction } from './utils';
+
+usedFunction(); // Only using usedFunction
+```
+
+**After Tree Shaking:**
+
+In a build process that supports tree shaking, the final bundle will only include `usedFunction`, while `unusedFunction` will be eliminated, resulting in a smaller bundle size.
+
+### Benefits of Tree Shaking
+
+1. **Reduced Bundle Size**: **Tree shaking** is a term commonly used in the context of JavaScript bundlers (like Webpack, Rollup, and Parcel) and refers to a technique used to eliminate dead code from the final bundle. Here’s a detailed explanation:
+
+### What is Tree Shaking?
+
+Tree shaking is a form of **dead code elimination** that helps reduce the size of JavaScript bundles by removing code that is not used in the application. This process ensures that only the necessary parts of the code are included in the final output, leading to improved performance and faster loading times.
+
+### How Does Tree Shaking Work?
+
+1. **Static Analysis**: 
+   - Tree shaking works by analyzing the **import and export statements** in your modules. It uses **static analysis** to determine which parts of the code are actually used (or "imported") and which parts are not.
+
+2. **ES6 Modules**: 
+   - Tree shaking is most effective with **ES6 (ECMAScript 2015)** modules because they use a static structure (import/export syntax). This allows the bundler to analyze dependencies and determine unused code at build time.
+   - Example:
+     ```javascript
+     // module.js
+     export const usedFunction = () => { console.log('I am used!'); }
+     export const unusedFunction = () => { console.log('I am not used!'); }
+     ```
+
+3. **Build Tools**: 
+   - Modern JavaScript bundlers, like Webpack and Rollup, implement tree shaking algorithms that identify and remove unused exports during the bundling process. 
+   - They will only include the `usedFunction` in the final bundle, excluding the `unusedFunction`.
+
+### Example of Tree Shaking
+
+Here’s a simple example to illustrate tree shaking:
+
+**Before Tree Shaking:**
+
+```javascript
+// utils.js
+export const usedFunction = () => { console.log('I am used!'); }
+export const unusedFunction = () => { console.log('I am not used!'); }
+
+// main.js
+import { usedFunction } from './utils';
+
+usedFunction(); // Only using usedFunction
+```
+
+**After Tree Shaking:**
+
+In a build process that supports tree shaking, the final bundle will only include `usedFunction`, while `unusedFunction` will be eliminated, resulting in a smaller bundle size.
+
+### Benefits of Tree Shaking
+
+1. **Reduced Bundle Size**: 
+   - By removing unused code, tree shaking helps minimize the size of the final JavaScript bundle, which improves load times and performance.
+
+2. **Improved Performance**: 
+   - Smaller bundles mean less data transfer, which is particularly beneficial for users on slow network connections or mobile devices.
+
+3. **Better Maintainability**: 
+   - Removing unused code can lead to cleaner codebases, making it easier for developers to understand and maintain the code.
+
+### Limitations and Considerations
+
+1. **Dynamic Imports**: 
+   - Tree shaking is less effective with dynamic imports or code that cannot be statically analyzed. For example, using `require()` instead of `import` makes it difficult for the bundler to identify unused code.
+   
+2. **Side Effects**: 
+   - If a module has side effects (i.e., it performs actions that affect the global state), the bundler may not eliminate it even if it appears unused. You can help the bundler with side effect configurations.
+   - **Package.json**: Use the `"sideEffects"` field in your `package.json` to indicate whether a module has side effects:
+     ```json
+     {
+       "sideEffects": false // Indicates that all modules can be tree-shaken
+     }
+     ```
+
+3. **ES6 Modules**: 
+   - Tree shaking works best with ES6 module syntax (`import/export`). If you are using CommonJS (`require/module.exports`), tree shaking may not work effectively.
+
+### Conclusion
+
+Tree shaking is an important optimization technique in modern JavaScript development that allows developers to create smaller, more efficient bundles by eliminating unused code. By leveraging ES6 module syntax and using compatible build tools, developers can significantly improve the performance of their web applications while keeping the codebase clean and maintainable.
+   - By removing unused code, tree shaking helps minimize the size of the final JavaScript bundle, which improves load times and performance.
+
+2. **Improved Performance**: 
+   - Smaller bundles mean less data transfer, which is particularly beneficial for users on slow network connections or mobile devices.
+
+3. **Better Maintainability**: 
+   - Removing unused code can lead to cleaner codebases, making it easier for developers to understand and maintain the code.
+
+### Limitations and Considerations
+
+1. **Dynamic Imports**: 
+   - Tree shaking is less effective with dynamic imports or code that cannot be statically analyzed. For example, using `require()` instead of `import` makes it difficult for the bundler to identify unused code.
+   
+2. **Side Effects**: 
+   - If a module has side effects (i.e., it performs actions that affect the global state), the bundler may not eliminate it even if it appears unused. You can help the bundler with side effect configurations.
+   - **Package.json**: Use the `"sideEffects"` field in your `package.json` to indicate whether a module has side effects:
+     ```json
+     {
+       "sideEffects": false // Indicates that all modules can be tree-shaken
+     }
+     ```
+
+3. **ES6 Modules**: 
+   - Tree shaking works best with ES6 module syntax (`import/export`). If you are using CommonJS (`require/module.exports`), tree shaking may not work effectively.
+
+### Conclusion
+
+Tree shaking is an important optimization technique in modern JavaScript development that allows developers to create smaller, more efficient bundles by eliminating unused code. By leveraging ES6 module syntax and using compatible build tools, developers can significantly improve the performance of their web applications while keeping the codebase clean and maintainable.

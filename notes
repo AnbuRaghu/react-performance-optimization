@@ -1,0 +1,5 @@
+what else needs to checked
+--------------------------
+---tree shaking
+---avoid blockoíng main thread
+---- avoid memory leak

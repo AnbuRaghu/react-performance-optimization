@@ -1,0 +1,138 @@
+In class components, the `shouldComponentUpdate` lifecycle method allows you to control whether a component should re-render based on changes in props or state. In functional components, there isn't a direct equivalent, but you can achieve similar functionality using hooks, particularly the **`React.memo`** and **`useMemo`** hooks.
+
+### Using `React.memo`
+
+**`React.memo`** is a higher-order component that memoizes a functional component, preventing it from re-rendering if its props haven’t changed. It works similarly to `shouldComponentUpdate`.
+
+#### Example:
+
+```jsx
+import React from 'react';
+
+// Functional component wrapped in React.memo
+const MyComponent = React.memo(({ data }) => {
+  console.log('Rendering MyComponent');
+
+  return <div>{data}</div>;
+});
+
+// Parent component
+const ParentComponent = () => {
+  const [count, setCount] = React.useState(0);
+  const [data, setData] = React.useState('Hello, World!');
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <MyComponent data={data} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+### How It Works:
+- In this example, `MyComponent` is wrapped in `React.memo`, which means it will only re-render if the `data` prop changes.
+- When the **Increment Count** button is clicked, the count state changes, but `MyComponent` will not re-render unless `data` changes, thus avoiding unnecessary renders.
+
+### Using `useMemo` and `useCallback`
+
+In addition to `React.memo`, you can optimize re-renders further using the **`useMemo`** and **`useCallback`** hooks.
+
+- **`useMemo`**: Memoizes a computed value to prevent recalculation on every render.
+
+  ```jsx
+  const memoizedValue = React.useMemo(() => computeExpensiveValue(data), [data]);
+  ```
+
+- **`useCallback`**: Returns a memoized version of a callback function that only changes if one of its dependencies has changed. This is useful for passing functions to child components that might otherwise cause unnecessary re-renders.
+
+  ```jsx
+  const memoizedCallback = React.useCallback(() => {
+    doSomething(data);
+  }, [data]);
+  ```
+
+### Example with `useMemo` and `useCallback`
+
+Here’s how you can use both hooks together:
+
+```jsx
+import React from 'react';
+
+const ExpensiveComponent = React.memo(({ value }) => {
+  console.log('Expensive Component Rendered');
+  return <div>{value}</div>;
+});
+
+const ParentComponent = () => {
+  const [count, setCount] = React.useState(0);
+  const [data, setData] = React.useState(0);
+
+  const computedValue = React.useMemo(() => {
+    return data * 2; // Expensive computation
+  }, [data]);
+
+  const handleChange = React.useCallback(() => {
+    setData(data + 1);
+  }, [data]);
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={handleChange}>Change Data</button>
+      <ExpensiveComponent value={computedValue} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+### Key Points:
+- **`React.memo`** prevents unnecessary re-renders by memoizing functional components based on props.
+- **`useMemo`** helps optimize expensive calculations, only recalculating when dependencies change.
+- **`useCallback`** can help ensure functions don’t get recreated on every render unless their dependencies change, which can help in passing functions to memoized child components.
+
+### Conclusion:
+While functional components do not have a direct equivalent to `shouldComponentUpdate`, you can effectively control re-renders and optimize performance using **`React.memo`**, **`useMemo`**, and **`useCallback`**. This allows you to avoid unnecessary rendering and improve the performance of your React applications.
+
+----------------------------------------------------------------------------------------------------------
+
+
+The line:
+
+```jsx
+const computedValue = React.useMemo(() => {
+    return data * 2; // Expensive computation
+}, [data]);
+```
+
+is using the **`useMemo`** hook in React to optimize performance by **memoizing** the result of a computation. Let’s break it down:
+
+### What `useMemo` Does:
+- **`useMemo`** is a hook that memoizes a value, meaning it **remembers** the result of a computation and **only recalculates** it when its dependencies change.
+- The first argument to `useMemo` is a function that performs a computation (in this case, `data * 2`).
+- The second argument is an array of dependencies `[data]`. **`useMemo`** will recompute the result **only if `data` changes**. If `data` stays the same, it will return the memoized (cached) result from the previous render.
+
+### In Detail:
+- **Computation:** `data * 2` is a simple multiplication here, but in real-world scenarios, the computation inside `useMemo` could be something much more expensive (e.g., a large loop, complex calculation, or even a fetch operation).
+  
+- **Memoization:** Normally, React would run the computation every time the component re-renders, even if `data` hasn't changed. But with `useMemo`, React will only perform the computation when `data` changes. If `data` is the same between renders, `useMemo` will skip recalculating and return the previously computed value, improving performance.
+
+### Example Breakdown:
+1. **Initial Render**: Suppose `data` is initially `5`. The `useMemo` hook will compute `5 * 2`, returning `10`, and `computedValue` will be set to `10`.
+   
+2. **Subsequent Renders**: If the component re-renders but `data` hasn't changed (still `5`), `useMemo` will **not recalculate** `5 * 2`. Instead, it will return the memoized result `10` from the previous render.
+
+3. **Data Change**: If `data` changes (e.g., `data = 7`), the function inside `useMemo` will run again, and `7 * 2` will be calculated, resulting in `computedValue = 14`.
+
+### Why Use It?
+In React, especially with functional components, re-renders are frequent. Without `useMemo`, every time the component re-renders, it would recompute `data * 2` even if `data` didn’t change. For simple operations like this, the performance impact is minimal, but for **expensive computations**, recomputing on every render could significantly degrade performance.
+
+By using `useMemo`, you ensure that the computation only happens when necessary (i.e., when the dependencies change), thus **optimizing performance**.
+
+### Summary:
+- **`useMemo`** memoizes the result of an expensive or repetitive computation, improving performance by avoiding unnecessary recalculations.
+- The computation will only be re-executed when the values in the dependency array (in this case, `[data]`) change.

@@ -1,0 +1,190 @@
+we can use a package called why-did-you-update to check unneccessary renders in dev memoized
+--------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+Ah, I see! The package **`why-did-you-update`** is a helpful tool for React developers. Here’s an overview of what it does and why it might be useful:
+
+### What is `why-did-you-update`?
+
+**`why-did-you-update`** is a library designed to help developers understand why a React component is re-rendering. It acts as a performance optimization tool, providing insights into unnecessary re-renders, which can lead to performance issues in React applications.
+
+### Key Features:
+
+1. **Detects Unnecessary Re-renders**:
+   - The main functionality of `why-did-you-update` is to log messages in the console when a component re-renders unnecessarily. This allows you to identify components that are re-rendering without a change in their props or state.
+
+2. **Helpful Logging**:
+   - When a component re-renders, `why-did-you-update` will print a detailed message that shows which props have changed and why the component decided to re-render. This includes comparisons of the old props and new props.
+
+3. **Integration with React**:
+   - It can be easily integrated into existing React applications by wrapping your components or the entire app in the provided higher-order component (HOC) or using the provided utility methods.
+
+4. **Improves Performance**:
+   - By identifying unnecessary re-renders, developers can optimize their components by implementing memoization (e.g., using `React.memo`) or by refactoring components to minimize props passed down.
+
+### How to Use `why-did-you-update`
+
+To use `why-did-you-update`, follow these steps:
+
+1. **Install the Package**:
+   You can install it via npm or yarn:
+
+   ```bash
+   npm install @welldone-software/why-did-you-update
+   ```
+
+   or
+
+   ```bash
+   yarn add @welldone-software/why-did-you-update
+   ```
+
+2. **Set Up in Your Application**:
+   You can set it up in your application’s entry point (e.g., `index.js` or `App.js`).
+
+   ```javascript
+   import React from 'react';
+   import ReactDOM from 'react-dom';
+   import App from './App';
+   import whyDidYouUpdate from '@welldone-software/why-did-you-update';
+
+   // Initialize the library
+   whyDidYouUpdate(React);
+
+   ReactDOM.render(<App />, document.getElementById('root'));
+   ```
+
+3. **Check the Console for Logs**:
+   When you run your application, the console will display logs when components re-render, detailing which props have changed.
+
+### Example Usage
+
+Here’s a simple example to illustrate how `why-did-you-update` works:
+
+```javascript
+import React, { useState } from 'react';
+import whyDidYouUpdate from '@welldone-software/why-did-you-update';
+
+whyDidYouUpdate(React);
+
+const Counter = React.memo(({ count }) => {
+  console.log('Counter rendered');
+  return <h1>{count}</h1>;
+});
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [otherState, setOtherState] = useState('Hello');
+
+  return (
+    <div>
+      <Counter count={count} />
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setOtherState(otherState === 'Hello' ? 'World' : 'Hello')}>
+        Change Other State
+      </button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+### What Happens:
+
+- When you click the **Increment** button, the `Counter` component should only re-render if `count` changes.
+- If you click the **Change Other State** button, the `Counter` component should **not** re-render, and `why-did-you-update` will help confirm this by not logging a render for the `Counter` component.
+
+### Benefits of Using `why-did-you-update`
+
+- **Performance Monitoring**: It helps you monitor the performance of your React components in real-time.
+- **Optimization Guidance**: By identifying unnecessary re-renders, it guides you on where to apply optimizations in your code.
+- **Enhanced Debugging**: It improves the debugging experience by providing clear insights into component behavior.
+
+### Conclusion
+
+**`why-did-you-update`** is a valuable tool for React developers focused on performance optimization. By helping identify unnecessary re-renders, it allows developers to write more efficient React applications, ultimately leading to better user experiences.
+------------------------------------------------
+
+
+
+You are correct! The **`why-did-you-update`** package should only be used in a **development environment**. It is designed primarily for debugging and performance optimization during the development phase, and it can introduce overhead if used in a production environment. 
+
+### Best Practices for Using `why-did-you-update`
+
+Here’s how you can ensure that **`why-did-you-update`** is only included in your development environment:
+
+1. **Conditional Import**:
+   You can conditionally import and initialize `why-did-you-update` based on the environment. This can be done by checking the `NODE_ENV` variable.
+
+   ```javascript
+   import React from 'react';
+   import ReactDOM from 'react-dom';
+   import App from './App';
+
+   // Only import why-did-you-update in development
+   if (process.env.NODE_ENV === 'development') {
+     const whyDidYouUpdate = require('@welldone-software/why-did-you-update');
+     whyDidYouUpdate(React);
+   }
+
+   ReactDOM.render(<App />, document.getElementById('root'));
+   ```
+
+2. **Using Environment Variables**:
+   Ensure your build process sets the `NODE_ENV` variable correctly. For instance, most build tools (like Webpack, Create React App, etc.) will set `NODE_ENV` to `production` when you build your app for production.
+
+3. **Avoiding Unwanted Logs**:
+   By using `why-did-you-update` only in development, you prevent any performance impact or logging clutter in your production logs.
+
+### Example with Full Component
+
+Here’s a complete example of how to conditionally use `why-did-you-update` in a React application:
+
+```javascript
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+// Check if we are in a development environment
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouUpdate = require('@welldone-software/why-did-you-update');
+  whyDidYouUpdate(React);
+}
+
+const Counter = React.memo(({ count }) => {
+  console.log('Counter rendered');
+  return <h1>{count}</h1>;
+});
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const [otherState, setOtherState] = useState('Hello');
+
+  return (
+    <div>
+      <Counter count={count} />
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setOtherState(otherState === 'Hello' ? 'World' : 'Hello')}>
+        Change Other State
+      </button>
+    </div>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+
+### Summary
+- **`why-did-you-update`** is an invaluable tool for identifying unnecessary re-renders in React applications but should **only be used in development**.
+- **Conditional loading** based on the `NODE_ENV` variable ensures that it does not affect production performance or generate unnecessary logs.
+- Following this practice helps maintain an efficient and clean production environment while still leveraging powerful debugging tools during development.
+
+

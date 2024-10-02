@@ -1,0 +1,58 @@
+we can measure react performance by entering ?react_perf in local url and inspect
+
+
+
+
+
+### What Does `?react_perf` Do?
+When you add the query parameter `?react_perf` to a URL, it activates **performance profiling** in some React development environments or tools. This is useful for monitoring and analyzing your React app's rendering performance, such as measuring component updates and how efficiently your app is running.
+
+### How it Works in a URL
+Suppose you're running a React app locally or in production, and you want to profile its performance. You can simply add `?react_perf` at the end of the app's URL:
+
+```
+http://localhost:3000/home?react_perf
+```
+
+Or for a production app:
+
+```
+https://yourapp.com/profile?react_perf
+```
+
+By adding `?react_perf` to the URL, the React app may:
+- Trigger internal mechanisms to collect performance data.
+- Enable specific performance-related features of the **React Developer Tools**.
+- Help track how often and how long each component renders, re-renders, and updates.
+  
+### How to Use It
+1. **Install React Developer Tools**: Ensure that you have the **React Developer Tools** extension installed in your browser (Chrome, Firefox, etc.).
+   
+2. **Navigate with `?react_perf`**: In your React app, open any route (like `/home`, `/about`, or `/profile`) and append `?react_perf` to the URL:
+   ```
+   http://localhost:3000/home?react_perf
+   ```
+
+3. **Open React Developer Tools**: Open your browser's Developer Tools (usually via `F12` or `Ctrl+Shift+I`), then go to the **React** tab provided by the React Developer Tools extension. You should see performance-related data and components being profiled.
+
+4. **View the Performance Tab**: The **Profiler** tab in React Developer Tools will show the render timings and highlight areas where the app may be inefficient.
+
+### When to Use It
+You might use `?react_perf` in the following scenarios:
+- **Debugging performance issues**: If your app is rendering slowly or re-rendering unnecessarily, using this query parameter will help you identify slow components.
+- **Performance optimization**: During development, it can help you optimize component rendering and reduce unnecessary updates.
+
+### How Does It Relate to Code Splitting?
+
+Code splitting can improve performance by loading only the required code for each route. When you use `?react_perf` to analyze your app, you can track how the **lazy-loaded components** (using `React.lazy` and `Suspense`) are affecting performance and how efficiently they are loaded on demand.
+
+For example, with `?react_perf` enabled, you might notice:
+- How much time it takes for a component to load when it is lazy-loaded.
+- How frequently components re-render when navigating between routes.
+
+### Summary:
+- **`?react_perf`** is a query parameter that activates **performance profiling** in React apps.
+- It helps you gather data on your app’s rendering performance and can be used in conjunction with tools like **React Developer Tools**.
+- It's especially useful when you're optimizing React apps and want to track how code-splitting or lazy-loading affects rendering performance.
+
+To analyze your app's performance, just add the query parameter `?react_perf` to any URL in your app, open the React Developer Tools, and review the **Profiler** tab.
